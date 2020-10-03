@@ -5,7 +5,7 @@ using UnityEditor;
 
 public class Atom : MonoBehaviour{
 
-	public static float levelSpacing = 1f;
+	public static float levelSpacing = 1.5f;
 
 	public float[] radii;
 	public int numLevels;

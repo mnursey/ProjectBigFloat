@@ -169,7 +169,6 @@ public class AtomToolWindow : EditorWindow
 		float mouseAngle = Util.VectorAngle(mousePos - anchorPos);
 		float divAngle = 2*Mathf.PI/subdiv;
 		int pNum = (int)((mouseAngle + divAngle/2)/divAngle);
-		Debug.Log(mouseAngle/Mathf.PI);
 		return new Vector2(Mathf.Cos(divAngle*pNum), Mathf.Sin(divAngle*pNum));
 	}
 
