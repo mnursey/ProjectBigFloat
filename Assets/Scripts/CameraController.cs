@@ -22,6 +22,11 @@ public class CameraController : MonoBehaviour{
 	Vector3 basePos;
 	Vector3 offset;
 
+	float shakeDuration;
+	float shakeMagnitude;
+	float shakeDamp;
+	Vector2 shakeVector;
+
     // Start is called before the first frame update
     void Start(){
         if(player == null) player = GameObject.Find("Player").GetComponent<Player>();
@@ -31,6 +36,14 @@ public class CameraController : MonoBehaviour{
 
     // Update is called once per frame
     void Update(){
+    	if(shakeDuration > 0){
+    		shakeVector = (Vector2)(Random.insideUnitSphere*shakeMagnitude);
+    		shakeMagnitude *= shakeDamp;
+    		shakeDuration -= Time.deltaTime;
+    	}else{
+    		shakeVector = Vector2.zero;
+    	}
+
         switch(mode){
         	case CameraMode.FollowPlayer:
         		transform.position = Vector3.SmoothDamp(transform.position,
@@ -55,12 +68,18 @@ public class CameraController : MonoBehaviour{
         											ref offsetVelocity,
         											smoothTime * Mathf.Clamp((basePos - atomPos).magnitude/player.parent.OuterRadius, 0.05f, 1f));
 
-        		transform.position = basePos + offset;
+        		transform.position = basePos + offset + (Vector3)shakeVector;
 
 
         	break;
         }
 
         //transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, smoothTime);
+    }
+
+    public void Shake(float magnitude, float duration, float damp = 1){
+    	shakeMagnitude = magnitude;
+    	shakeDuration = duration;
+    	shakeDamp = damp;
     }
 }

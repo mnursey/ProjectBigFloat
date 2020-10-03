@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public List<Atom> atoms;
+    public int BPM;
 
     //temp
     void Start(){

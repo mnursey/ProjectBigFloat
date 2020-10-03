@@ -13,7 +13,7 @@ public class AtomToolWindow : EditorWindow
 
     public bool isEditing = false;
 
-	public static float baseRadiusUnit = 2; // This will eventually be determined by BPM and such
+	public static float baseRadiusUnit = 1; // This will eventually be determined by BPM and such
 	public static float anchorSnapThresh = 10;
 
     public int radius;
@@ -106,7 +106,7 @@ public class AtomToolWindow : EditorWindow
 		if(toBePlaced == null){
 			if(e.type == EventType.MouseDown && e.button == 0){
 				toBePlaced = Instantiate(AssetDatabase.LoadAssetAtPath<Atom>("Assets/Prefabs/Atom.prefab")).GetComponent<Atom>();
-				toBePlaced.Init(radius, numLevels);
+				toBePlaced.Init(radius*baseRadiusUnit, numLevels);
 				//Debug.Log("PREVIEW");
 			}
 
