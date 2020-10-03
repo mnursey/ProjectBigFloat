@@ -11,6 +11,8 @@ public class Atom : MonoBehaviour{
 	public int numLevels;
 	public AtomVisualController[] visualizers;
 
+    public GameObject centreVisual;
+
 	public float OuterRadius{
 		get{
 			return radii[0];
@@ -39,6 +41,11 @@ public class Atom : MonoBehaviour{
 
 		radiusDebug = r;
 		SetRadii(r);
+
+        if(centreVisual != null)
+        {
+            centreVisual.transform.localScale *= OuterRadius;
+        }
 	}
 
 	void Update(){
