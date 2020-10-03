@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
-	public GameManager GM;
+	public Transform atomMap;
 
 	public static float overlapThresh = 1f;
 
@@ -14,7 +14,7 @@ public class Player : MonoBehaviour {
 	public int level;
 
 	void Start(){
-		if(GM == null) GM = GameObject.Find("GameManager").GetComponent<GameManager>();
+		if(atomMap == null) atomMap = GameObject.Find("Atom Map").transform;
 		Debug.Log(Util.VectorAngle(new Vector2(1,1)));
 		Debug.Log(Util.VectorAngle(new Vector2(-1,1)));
 		Debug.Log(Util.VectorAngle(new Vector2(-1,-1)));
@@ -32,9 +32,10 @@ public class Player : MonoBehaviour {
 	}
 
 	public void TryJump(){
-		foreach(Atom a in GM.atoms){
-			if(a == parent) continue;
+		foreach(Transform t in atomMap){
+			if(t == parent.transform) continue;
 
+			Atom a = t.GetComponent<Atom>();
 			float dist = (transform.position - a.transform.position).magnitude;
 			for(int l = 0; l < a.numLevels; l++){
 				if(Mathf.Abs(dist - a.radii[l]) < overlapThresh){

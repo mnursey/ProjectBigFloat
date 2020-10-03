@@ -59,7 +59,12 @@ public class AtomToolWindow : EditorWindow
 	void OnDestroy() {
     	// When the window is destroyed, remove the delegate
      	// so that it will no longer do any drawing.
-     	SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
+     	ToggleEditing(false);
+ 	}
+
+ 	void OnEnable(){
+ 		isEditing = false;
+ 		ToggleEditing(false);
  	}
 
 	public void OnGUI(){
