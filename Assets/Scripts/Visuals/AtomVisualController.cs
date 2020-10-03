@@ -7,13 +7,15 @@ public class AtomVisualController : MonoBehaviour
 {
     LineRenderer lr;
 
-    public int numSegments = 8;
+    public float numSegmentsFactor = 64;
+    private int numSegments = 8;
     public float pulseAmp = 0.25f;
     public float pulseFrequency = 1f;
     public float pulseDiff = 1f;
     public float iScale = 1f;
-    public float randomScale = 1f;
 
+    List<float> wave = new List<float>();
+    List<Vector3> circle = new List<Vector3>();
     List<Vector3> positions = new List<Vector3>();
 
     public bool updateParams = false;
@@ -42,25 +44,47 @@ public class AtomVisualController : MonoBehaviour
     {
         positions = new List<Vector3>();
 
-        List<float> segmentRadius = new List<float>();
+        numSegments = Mathf.RoundToInt(transform.localScale.x * 2f * Mathf.PI * numSegmentsFactor);
+
+        if(numSegments < 0)
+        {
+            numSegments = 1;
+        }
+
+        if (circle.Count != numSegments + 1)
+        {
+            circle = new List<Vector3>();
+
+            // Create circle
+            for (int i = 0; i < numSegments + 1; ++i)
+            {
+                float rad = Mathf.Deg2Rad * (i * 360f / numSegments);
+
+                circle.Add(new Vector3(Mathf.Sin(rad), Mathf.Cos(rad), 0));
+            }
+        }
+
+        //if(wave.Count != numSegments + 1)
+        {
+            wave = new List<float>();
+
+            // Create wave
+            for (int i = 0; i < numSegments + 1; ++i)
+            {
+                wave.Add((Mathf.PerlinNoise(time * pulseFrequency, i * iScale) - 0.5f) * pulseAmp / transform.localScale.x + pulseDiff);
+            }
+        }
+
+        List<Vector3> segmentPos = new List<Vector3>();
 
         // Create Line
         for(int i = 0; i < numSegments + 1; ++i)
         {
-            segmentRadius.Add(FncA(time * pulseFrequency * Mathf.Deg2Rad) * pulseAmp * FncA(i * iScale) + pulseDiff);
-            segmentRadius[i] += Random.Range(-randomScale, randomScale);
-        }
-
-        // Create cirlce
-        for(int i = 0; i < numSegments + 1; ++i)
-        {
-            float rad = Mathf.Deg2Rad * (i * 360f / numSegments);
-
-            positions.Add(new Vector3(Mathf.Sin(rad) * segmentRadius[i], Mathf.Cos(rad) * segmentRadius[i], 0));
+            segmentPos.Add(wave[i] * circle[i]);
         }
 
         lr.positionCount = numSegments + 1;
-        lr.SetPositions(positions.ToArray());
+        lr.SetPositions(segmentPos.ToArray());
         lr.useWorldSpace = false;
         lr.loop = true;
     }
