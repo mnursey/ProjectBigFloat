@@ -22,7 +22,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public void Update(){
-		angle = angle + velocity/parent.OuterRadius;
+		angle = angle + velocity*Time.deltaTime/parent.OuterRadius;
 		Vector2 newPos = ((Vector2)parent.transform.position) + parent.radii[level] * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 		transform.position = (Vector3)newPos;
 
