@@ -6,7 +6,7 @@ public class Player : MonoBehaviour {
 
 	public GameManager GM;
 
-	public static float overlapThresh = 3f;
+	public static float overlapThresh = 1f;
 
 	public Atom parent;
 	public float velocity;

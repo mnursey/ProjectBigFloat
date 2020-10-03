@@ -4,27 +4,17 @@ using UnityEngine;
 
 public static class Util 
 {
-    //Returns radian angle of a vector relative to Vector2.right
- 	public static float VectorAngle(Vector2 v){
- 		int q;
+    public static float VectorAngle(Vector2 v){
  		if(v.x > 0){
- 			if(v.y >= 0){
- 				q = 0;
- 			}else{
- 				q = 3;
- 			}
-		}else{
-			if(v.y > 0){
-				q = 1;
+ 			if(v.y > 0){
+ 				return Mathf.Atan(v.y/v.x);
 			}else{
-				q = 2;
+				return Mathf.Atan(v.y/v.x) + 2*Mathf.PI;
 			}
-		}
- 		
- 		if(v.x != 0){
- 			return Mathf.Atan(Mathf.Abs(v.y/v.x)) + q*(Mathf.PI/2);
+ 		}else if(v.x < 0){
+ 				return Mathf.Atan(v.y/v.x) + Mathf.PI;
 		}else{
-			return (v.y > 0) ? (Mathf.PI/2) : 3*(Mathf.PI/2);
+			return (v.y > 0) ? (Mathf.PI/2) : (3*Mathf.PI/2);
 		}
  		
  	}

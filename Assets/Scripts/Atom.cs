@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class Atom : MonoBehaviour{
 
@@ -8,6 +9,7 @@ public class Atom : MonoBehaviour{
 
 	public float[] radii;
 	public int numLevels;
+	public AtomVisualController[] visualizers;
 
 	public float OuterRadius{
 		get{
@@ -21,14 +23,21 @@ public class Atom : MonoBehaviour{
 	//temp
 	public float radiusDebug;
 
-
-	public void Awake(){
-		Init(10, 1);
-	}
+	//public void Awake(){
+	//	Init(10, 1);
+	//}
 
 	public void Init(float r, int l){
 		numLevels = l;
 		radii = new float[numLevels];
+		visualizers = new AtomVisualController[numLevels];
+
+		//temp
+		for(int i = 0; i < numLevels; i++){
+			visualizers[i] = Instantiate(AssetDatabase.LoadAssetAtPath<AtomVisualController>("Assets/Prefabs/AtomVisual.prefab"), transform);
+		}
+
+		radiusDebug = r;
 		SetRadii(r);
 	}
 
@@ -39,6 +48,7 @@ public class Atom : MonoBehaviour{
     private void SetRadii(float outer){
     	for(int i = 0; i < numLevels; i++){
     		radii[i] = outer - levelSpacing*i;
+    		visualizers[i].transform.localScale = new Vector3(radii[i], radii[i], 1);
     	}
     }
 }
