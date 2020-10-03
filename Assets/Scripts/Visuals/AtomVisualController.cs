@@ -71,7 +71,7 @@ public class AtomVisualController : MonoBehaviour
             // Create wave
             for (int i = 0; i < numSegments + 1; ++i)
             {
-                wave.Add(Mathf.PerlinNoise(time * pulseFrequency, i * iScale) * pulseAmp / transform.localScale.x + pulseDiff);
+                wave.Add((Mathf.PerlinNoise(time * pulseFrequency, i * iScale) - 0.5f) * pulseAmp / transform.localScale.x + pulseDiff);
             }
         }
 
