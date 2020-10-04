@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 public class Atom : MonoBehaviour{
 
@@ -14,7 +15,14 @@ public class Atom : MonoBehaviour{
 
     public GameObject centreVisual;
 
-	public float OuterRadius{
+    public bool powered = true;
+
+    public Color colour = new Color();
+    public Color poweredColour = new Color();
+
+    List<LineRenderer> lrs = new List<LineRenderer>();
+
+    public float OuterRadius{
 		get{
 			return radii[0];
 		}
@@ -29,6 +37,11 @@ public class Atom : MonoBehaviour{
 	//public void Awake(){
 	//	Init(10, 1);
 	//}
+
+    void Start()
+    {
+        lrs = GetComponentsInChildren<LineRenderer>().ToList();
+    }
 
 	public void Init(float r, int l){
 		if(GM == null) GM = GameObject.Find("Game Manager").GetComponent<GameManager>();
@@ -50,8 +63,27 @@ public class Atom : MonoBehaviour{
         }
 	}
 
-	void Update(){
+	void Update()
+    {
 		OuterRadius = radiusDebug;
+
+        if (powered)
+        {
+            foreach (LineRenderer lr in lrs)
+            {
+                lr.startColor = Color.white;
+                lr.endColor = Color.white;
+            }
+        }
+        else
+        {
+            foreach (LineRenderer lr in lrs)
+            {
+                lr.startColor = new Color(0.5f, 0, 0, 1);;
+                lr.endColor = new Color(0.5f, 0, 0, 1);;
+            }
+        }
+
 		foreach(AtomVisualController avc in visualizers){
 			avc.pulseFrequency = GM.BPS;
 		}
