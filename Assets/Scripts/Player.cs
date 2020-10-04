@@ -8,28 +8,42 @@ public class Player : MonoBehaviour {
 	public CameraController camera;
 	public Transform atomMap;
 
-	public static float overlapThresh = 1f;
+	public static float overlapThresh = 0.5f;
 
 	public Atom parent;
-	public int freq;
-	int direction = 1;
-	public float velocity;
+	public float freq;
+	int direction ;
+	float velocity;
 	public float angle; //In RADIANS (2pi rads = 360 degs)
 	public int level;
+	public bool enabled;
 
 	public float jumpShakeMag;
 	public float jumpShakeDur;
 	public float jumpShakeDamp;
 
-	void Start(){
-		if(GM == null) GM = GameObject.Find("Game Manager").GetComponent<GameManager>();
+	public void PrepareForLevelStart(Transform map, Atom initParent, float initAngle, float frequency){
+		if(GM == null) GM = GameManager.GetGM();
 		if(camera == null) camera = GameObject.Find("Main Camera").GetComponent<CameraController>();
-		if(atomMap == null) atomMap = GameObject.Find("Atom Map").transform;
-		if(parent == null) parent = atomMap.GetChild(0).GetComponent<Atom>();
-		angle = 0.1f;
+
+		atomMap = map;
+		parent = initParent;
+		angle = initAngle*Mathf.Deg2Rad;
+		level = 0;
+		direction = 1;
+		freq = frequency;
+		enabled = false;
+
+		transform.position = ((Vector2)parent.transform.position) + parent.OuterRadius * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
 	}
 
 	public void Update(){
+<<<<<<< HEAD
+=======
+		if(!enabled) return;
+
+		velocity = GM.BPS*(2*Mathf.PI)*freq;
+>>>>>>> 08b2894210bd6d87e23346c71a0fce7e20c7e5cf
 
         if(freq > 0)
         {
@@ -82,14 +96,61 @@ public class Player : MonoBehaviour {
 		int newLevel = level+inc;
 		if(newLevel >= 0 && newLevel < parent.radii.Length){
 			level = newLevel;
+			camera.Shake(jumpShakeMag/2, jumpShakeDur, jumpShakeDamp);
 		}
 
 	}
 
 	void Jump(Atom newParent, int dirMod){
-		parent = newParent;
 		level = 0;
-		angle = Util.VectorAngle((Vector2)(transform.position - newParent.transform.position));
 		direction *= dirMod;
+		Vector2 atomDisp = (Vector2)(parent.transform.position - newParent.transform.position);
+		parent = newParent;
+
+		angle = QuantizeAngle(Util.VectorAngle((Vector2)(transform.position - newParent.transform.position)),
+				Util.VectorAngle(atomDisp));
+		
+
+		GM.score += 100;
 	}
+
+
+	float QuantizeAngle(float playerAngle, float parentAngle){
+    	float quantumAngle = Mathf.Abs(velocity)*(1f/(GM.BPS*GM.pulsesPerBeat))/parent.OuterRadius;
+
+    	float numPulses = GM.musicPositionSec*GM.BPS*GM.pulsesPerBeat;
+    	float pulseOffset = numPulses - (int)numPulses;
+    	if(pulseOffset > 0.5f) pulseOffset -= 1;
+
+    	float globalAngleOffset = direction*pulseOffset*quantumAngle;
+
+    	float offsetAngle = Util.RadianWrap(playerAngle - parentAngle - globalAngleOffset);
+
+    	float numQuantums = offsetAngle/quantumAngle;
+    	int wholeQuantums = (int)numQuantums;
+    	float remainder = numQuantums - wholeQuantums;
+
+    	//Debug.Log("Angle: "+ angle/Mathf.PI);
+    	Debug.Log("Pulse offset: "+ pulseOffset);
+    	//Debug.Log("Parent angle: "+ parentAngle/Mathf.PI);
+    	//Debug.Log("Global Offset: "+ globalAngleOffset/Mathf.PI);
+    	//Debug.Log("Offset Angle: "+ offsetAngle/Mathf.PI);
+    	//Debug.Log("Num Qs: "+ numQuantums);
+    	//Debug.Log("Quantum angle: "+ quantumAngle/Mathf.PI);
+    	//Debug.Log("Whole Qs: "+ wholeQuantums);
+    	//Debug.Log("Remainder: "+ remainder*quantumAngle/Mathf.PI);
+    	
+		float finalAngle;
+    	if(Mathf.Abs(remainder) > 0.5f){
+    		finalAngle = Util.RadianWrap(quantumAngle*(wholeQuantums+1) + parentAngle + globalAngleOffset);
+    		Debug.Log("Final Angle (A): "+ finalAngle);
+		}else{
+			finalAngle = Util.RadianWrap(quantumAngle*(wholeQuantums) + parentAngle + globalAngleOffset);
+			Debug.Log("Final Angle (B): "+ finalAngle);
+		}
+
+		return finalAngle;
+
+
+    }
 }
