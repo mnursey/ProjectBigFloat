@@ -6,7 +6,6 @@ using UnityEngine;
 public class AtomVisualController : MonoBehaviour
 {
     LineRenderer lr;
-
     public float numSegmentsFactor = 64;
     private int numSegments = 8;
     public float pulseAmp = 0.25f;

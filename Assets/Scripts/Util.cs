@@ -18,4 +18,14 @@ public static class Util
 		}
  		
  	}
+
+ 	public static float RadianWrap(float angle){
+ 		if(angle < 0){
+ 			return angle + 2*Mathf.PI;
+ 		}else if(angle > 2*Mathf.PI){
+ 			return angle - 2*Mathf.PI;
+ 		} 
+
+ 		return angle;
+ 	}
 }

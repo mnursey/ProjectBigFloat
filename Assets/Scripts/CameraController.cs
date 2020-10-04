@@ -11,6 +11,7 @@ public class CameraController : MonoBehaviour{
 	}
 
 	public CameraMode mode;
+	public bool enabled;
 	public float smoothTime;
 	public float hybridRadiusWeight;
 	public float hybridRadiusOffset;
@@ -36,6 +37,8 @@ public class CameraController : MonoBehaviour{
 
     // Update is called once per frame
     void Update(){
+    	if(!enabled) return;
+
     	if(shakeDuration > 0){
     		shakeVector = (Vector2)(Random.insideUnitSphere*shakeMagnitude);
     		shakeMagnitude *= shakeDamp;
@@ -69,8 +72,6 @@ public class CameraController : MonoBehaviour{
         											smoothTime * Mathf.Clamp((basePos - atomPos).magnitude/player.parent.OuterRadius, 0.05f, 1f));
 
         		transform.position = basePos + offset + (Vector3)shakeVector;
-
-
         	break;
         }
 

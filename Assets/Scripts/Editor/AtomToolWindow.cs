@@ -108,6 +108,12 @@ public class AtomToolWindow : EditorWindow
 				toBePlaced = Instantiate(AssetDatabase.LoadAssetAtPath<Atom>("Assets/Prefabs/Atom.prefab")).GetComponent<Atom>();
 				toBePlaced.Init(radius*baseRadiusUnit, numLevels);
 				//Debug.Log("PREVIEW");
+			}else if(e.type == EventType.MouseDrag && e.button == 1){
+				foreach(Transform t in map){
+					if(((Vector2)t.position - mousePos).sqrMagnitude < 1){
+						DestroyImmediate(t.gameObject);
+					}
+				}
 			}
 
 		//if toBePlaced != null
@@ -157,7 +163,7 @@ public class AtomToolWindow : EditorWindow
 			}
 		}
 
-		if(e.type == EventType.MouseDown || e.type == EventType.MouseUp){
+		if((e.type == EventType.MouseDown || e.type == EventType.MouseUp) && e.button != 2){
 			e.Use();
 		}
 
