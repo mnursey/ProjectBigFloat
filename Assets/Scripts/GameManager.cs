@@ -14,6 +14,10 @@ public class GameManager : MonoBehaviour
     public Player player;
     public CameraController camera;
     public AudioSource music;
+    public CountdownController countdown;
+
+    public int score = 1000;
+
 
     bool waitingForLevelStart;
     float levelStartTime;
@@ -36,6 +40,7 @@ public class GameManager : MonoBehaviour
     	if(player == null) player = GameObject.Find("Player").GetComponent<Player>();
     	if(camera == null) camera = GameObject.Find("Main Camera").GetComponent<CameraController>();
     	if(music == null) music = GameObject.Find("Music Source").GetComponent<AudioSource>();
+    	if(countdown == null) countdown = GameObject.Find("Countdown").GetComponent<CountdownController>();
 
     	player.camera = camera;
     	camera.player = player;
@@ -47,37 +52,46 @@ public class GameManager : MonoBehaviour
     }
 
     public void PreStartLevel(int i){
+    	currentLevel = levels[i];
+
     	foreach(LevelData ld in levels){
     		ld.map.gameObject.SetActive(false);
     	}
 
-    	currentLevel = levels[i];
-    	currentLevel.map.gameObject.SetActive(true);
-
     	BPM = currentLevel.BPM;
     	BPS = BPM/60f;
 
-    	music.clip = currentLevel.music;
-    	music.PlayScheduled(AudioSettings.dspTime + 1);
+    	score = 5000;
 
-    	levelStartTime = Time.time + 1.15f;
+    	currentLevel.map.gameObject.SetActive(true);
+
+    	player.gameObject.SetActive(true);
+    	player.PrepareForLevelStart(currentLevel.map, currentLevel.startAtom, currentLevel.startAngle, currentLevel.frequency);
+    	
+    	camera.enabled = true;
+    	
+    	music.clip = currentLevel.music;
+    	music.PlayScheduled(AudioSettings.dspTime + 2);
+
+    	levelStartTime = Time.time + 2 + currentLevel.firstBeatDelay;
     	waitingForLevelStart = true;
+
+    	countdown.Set(levelStartTime);
     }
 
     public void StartLevel(){
-    	player.gameObject.SetActive(true);
-    	player.StartLevel(currentLevel.map, currentLevel.startAtom, currentLevel.startAngle);
-
-    	camera.enabled = true;
+    	player.enabled = true;
     }
 
     void Update(){
-    	musicPositionSec = music.time - 0.15f;
+    	if(currentLevel != null){
+    		musicPositionSec = music.time + 2 - currentLevel.firstBeatDelay;
 
-    	if(waitingForLevelStart && Time.time > levelStartTime){
-    		waitingForLevelStart = false;
-    		StartLevel();
-    	}
+	    	if(waitingForLevelStart && Time.time > levelStartTime){
+	    		waitingForLevelStart = false;
+	    		StartLevel();
+	    	}
+	    }
 
     	if(Input.GetKeyDown("space")){
     		//temp
@@ -87,7 +101,12 @@ public class GameManager : MonoBehaviour
     	if(Input.GetMouseButtonDown(1)){
     		//Debug.Log(musicPositionSec*BPS - (int)(musicPositionSec*BPS));
     	}
-    	
+
+    	score -= (int)(100*Time.deltaTime);
+    }
+
+    public static GameManager GetGM(){
+    	return GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
 

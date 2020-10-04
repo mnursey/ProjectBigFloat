@@ -10,5 +10,7 @@ public class LevelData : MonoBehaviour
     public float startAngle;
     public List<Atom> checkpoints = new List<Atom>();
     public int BPM;
+    public float firstBeatDelay;
+    public float frequency;
     public AudioClip music;
 }
