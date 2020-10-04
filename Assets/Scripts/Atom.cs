@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
+using System.Linq;
 
 public class Atom : MonoBehaviour{
 
@@ -13,7 +14,14 @@ public class Atom : MonoBehaviour{
 
     public GameObject centreVisual;
 
-	public float OuterRadius{
+    public bool powered = true;
+
+    public Color colour = new Color();
+    public Color poweredColour = new Color();
+
+    List<LineRenderer> lrs = new List<LineRenderer>();
+
+    public float OuterRadius{
 		get{
 			return radii[0];
 		}
@@ -29,7 +37,12 @@ public class Atom : MonoBehaviour{
 	//	Init(10, 1);
 	//}
 
-	public void Init(float r, int l){
+    void Start()
+    {
+        lrs = GetComponentsInChildren<LineRenderer>().ToList();
+    }
+
+    public void Init(float r, int l){
 		numLevels = l;
 		radii = new float[numLevels];
 		visualizers = new AtomVisualController[numLevels];
@@ -50,7 +63,24 @@ public class Atom : MonoBehaviour{
 
 	void Update(){
 		OuterRadius = radiusDebug;
-	}
+
+        if (powered)
+        {
+            foreach (LineRenderer lr in lrs)
+            {
+                lr.startColor = poweredColour;
+                lr.endColor = poweredColour;
+            }
+        }
+        else
+        {
+            foreach (LineRenderer lr in lrs)
+            {
+                lr.startColor = colour;
+                lr.endColor = colour;
+            }
+        }
+    }
 
     private void SetRadii(float outer){
     	for(int i = 0; i < numLevels; i++){

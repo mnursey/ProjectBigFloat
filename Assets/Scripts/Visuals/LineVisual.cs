@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteInEditMode]
-public class AtomVisualController : MonoBehaviour
+public class LineVisual : MonoBehaviour
 {
     LineRenderer lr;
 
@@ -11,11 +11,10 @@ public class AtomVisualController : MonoBehaviour
     private int numSegments = 8;
     public float pulseAmp = 0.25f;
     public float pulseFrequency = 1f;
-    public float pulseDiff = 1f;
     public float iScale = 1f;
 
     List<float> wave = new List<float>();
-    List<Vector3> circle = new List<Vector3>();
+    List<Vector3> line = new List<Vector3>();
 
     public bool updateParams = false;
 
@@ -26,7 +25,7 @@ public class AtomVisualController : MonoBehaviour
     {
         lr = GetComponent<LineRenderer>();
 
-        if(lr == null)
+        if (lr == null)
         {
             Debug.LogError("Requires line renderer.");
         }
@@ -41,23 +40,21 @@ public class AtomVisualController : MonoBehaviour
 
     void CreateCircle(float time)
     {
-        numSegments = Mathf.RoundToInt(transform.localScale.x * 2f * Mathf.PI * numSegmentsFactor);
+        numSegments = Mathf.RoundToInt(transform.localScale.x * numSegmentsFactor);
 
-        if(numSegments < 0)
+        if (numSegments < 0)
         {
             numSegments = 1;
         }
 
-        if (circle.Count != numSegments + 1)
+        if (line.Count != numSegments + 1)
         {
-            circle = new List<Vector3>();
+            line = new List<Vector3>();
 
-            // Create circle
+            // Create line
             for (int i = 0; i < numSegments + 1; ++i)
             {
-                float rad = Mathf.Deg2Rad * (i * 360f / numSegments);
-
-                circle.Add(new Vector3(Mathf.Sin(rad), Mathf.Cos(rad), 0));
+                line.Add(new Vector3(transform.localScale.x / numSegments * i, 0f, 0f));
             }
         }
 
@@ -68,22 +65,24 @@ public class AtomVisualController : MonoBehaviour
             // Create wave
             for (int i = 0; i < numSegments + 1; ++i)
             {
-                wave.Add((Mathf.PerlinNoise(time * pulseFrequency, i * iScale) - 0.5f) * pulseAmp / transform.localScale.x + pulseDiff);
+                wave.Add((Mathf.PerlinNoise(time * pulseFrequency, i * iScale) - 0.5f) * pulseAmp / transform.localScale.x);
             }
+
+            wave[0] = 0f;
         }
 
         List<Vector3> segmentPos = new List<Vector3>();
 
         // Create Line
-        for(int i = 0; i < numSegments + 1; ++i)
+        for (int i = 0; i < numSegments + 1; ++i)
         {
-            segmentPos.Add(wave[i] * circle[i]);
+            segmentPos.Add((wave[i] * Vector3.up) + line[i]);
         }
 
         lr.positionCount = numSegments + 1;
         lr.SetPositions(segmentPos.ToArray());
         lr.useWorldSpace = false;
-        lr.loop = true;
+        lr.loop = false;
     }
 
     // Update is called once per frame
@@ -91,7 +90,5 @@ public class AtomVisualController : MonoBehaviour
     {
         CreateCircle(Time.time);
         updateParams = false;
-
-        transform.Rotate(Vector3.forward, rotateSpeed * Time.deltaTime);
     }
 }

@@ -30,18 +30,25 @@ public class Player : MonoBehaviour {
 	}
 
 	public void Update(){
-		velocity = ((GM.BPM/60f)*(2*Mathf.PI))/freq;
 
-		angle = angle + direction*velocity*Time.deltaTime/parent.OuterRadius;
-		Vector2 newPos = ((Vector2)parent.transform.position) + parent.radii[level] * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-		transform.position = (Vector3)newPos;
+        if(freq > 0)
+        {
+            velocity = ((GM.BPM / 60f) * (2 * Mathf.PI)) / freq;
 
-		if(Input.GetMouseButtonDown(0)){
-			if(!TryJump(1)) Switch(-1);
-			
-		}else if(Input.GetMouseButtonDown(1)){
-			if(!TryJump(-1)) Switch(1);
-		}
+            angle = angle + direction * velocity * Time.deltaTime / parent.OuterRadius;
+            Vector2 newPos = ((Vector2)parent.transform.position) + parent.radii[level] * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+            transform.position = (Vector3)newPos;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                if (!TryJump(1)) Switch(-1);
+
+            }
+            else if (Input.GetMouseButtonDown(1))
+            {
+                if (!TryJump(-1)) Switch(1);
+            }
+        }
 	}
 
 	public bool TryJump(int dir){
@@ -49,6 +56,12 @@ public class Player : MonoBehaviour {
 			if(t == parent.transform) continue;
 
 			Atom a = t.GetComponent<Atom>();
+
+            if(!a.powered)
+            {
+                continue;
+            }
+
 			float dist = (transform.position - a.transform.position).magnitude;
 			for(int l = 0; l < a.numLevels; l++){
 				if(Mathf.Abs(dist - a.OuterRadius) < overlapThresh){
