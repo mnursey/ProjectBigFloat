@@ -38,30 +38,23 @@ public class Player : MonoBehaviour {
 	}
 
 	public void Update(){
-<<<<<<< HEAD
-=======
+
 		if(!enabled) return;
 
-		velocity = GM.BPS*(2*Mathf.PI)*freq;
->>>>>>> 08b2894210bd6d87e23346c71a0fce7e20c7e5cf
+        velocity = GM.BPS * (2 * Mathf.PI) * freq;
 
-        if(freq > 0)
+        angle = angle + direction * velocity * Time.deltaTime / parent.OuterRadius;
+        Vector2 newPos = ((Vector2)parent.transform.position) + parent.radii[level] * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+        transform.position = (Vector3)newPos;
+
+        if (Input.GetMouseButtonDown(0))
         {
-            velocity = ((GM.BPM / 60f) * (2 * Mathf.PI)) / freq;
+            if (!TryJump(1)) Switch(-1);
 
-            angle = angle + direction * velocity * Time.deltaTime / parent.OuterRadius;
-            Vector2 newPos = ((Vector2)parent.transform.position) + parent.radii[level] * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
-            transform.position = (Vector3)newPos;
-
-            if (Input.GetMouseButtonDown(0))
-            {
-                if (!TryJump(1)) Switch(-1);
-
-            }
-            else if (Input.GetMouseButtonDown(1))
-            {
-                if (!TryJump(-1)) Switch(1);
-            }
+        }
+        else if (Input.GetMouseButtonDown(1))
+        {
+            if (!TryJump(-1)) Switch(1);
         }
 	}
 
