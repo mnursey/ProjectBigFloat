@@ -83,6 +83,10 @@ public class GameManager : MonoBehaviour
     	player.enabled = true;
     }
 
+    public void DamagePlayer(){
+    	
+    }
+
     void Update(){
     	if(currentLevel != null){
     		musicPositionSec = music.time + 2 - currentLevel.firstBeatDelay;

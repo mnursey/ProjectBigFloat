@@ -6,37 +6,35 @@ using UnityEditor;
 using GL = UnityEngine.GUILayout;
 using EGL = UnityEditor.EditorGUILayout;
 
-public class AtomToolWindow : EditorWindow
+public class IonToolWindow : EditorWindow
 {
 	private Transform mapHolder;
     private Transform map;
     private int targetMapIndex = 0;
-    public Atom toBePlaced;
+    public Ion toBePlaced;
 
     public bool isEditing = false;
 
-	public static float baseRadiusUnit = 1; // This will eventually be determined by BPM and such
+	public static float baseRadiusUnit = 0.1f; // This will eventually be determined by BPM and such
 	public static float anchorSnapThresh = 10;
 
-    public int radius;
+	public IonBehaviour behaviour;
+    public float radius;
     public int subdiv;
-    public int numLevels;
     
     int radiusIndex;
     int subdivIndex;
-    int numLevelsIndex;
 
-   	string[] radiusLabels = {"1", "2", "3", "4", "6", "8", "12", "16"};
+   	//string[] radiusLabels = {"0.1", "0.2", "", "4", "6", "8", "12", "16"};
    	string[] subdivLabels = {"1/4", "1/6", "1/8", "1/12", "1/16", "NA"};
-   	string[] numLevelsLabels = {"1", "2", "3", "4", "5"};
 
-   	int[] radiusOptions = {1, 2, 3, 4, 6, 8, 12, 16};
+   	//int[] radiusOptions = {1, 2, 3, 4, 6, 8, 12, 16};
    	int[] subdivOptions = {4, 6, 8, 12, 16, 0};
 
-    [MenuItem("Window/Atom Placement Tool")]
+    [MenuItem("Window/Ion Placement Tool")]
 	private static void OpenWindow(){
-		AtomToolWindow window = GetWindow<AtomToolWindow>();
-		window.titleContent = new GUIContent("Atom Placement Tool");
+		IonToolWindow window = GetWindow<IonToolWindow>();
+		window.titleContent = new GUIContent("Ion Placement Tool");
 		window.maxSize = new Vector2(500, 150);
 		window.minSize = new Vector2(300, 150);
 		window.Show();
@@ -71,23 +69,21 @@ public class AtomToolWindow : EditorWindow
 
 	public void OnGUI(){
 		if(mapHolder == null){
-			mapHolder = GameObject.Find("Atom Map List").transform;
+			mapHolder = GameObject.Find("Ion Map List").transform;
 			if(mapHolder == null){
-				GUI.Label(new Rect((position.width - 100)/2, (position.height - 20)/2, 100, 20), "NO ATOM MAP LIST");
+				GUI.Label(new Rect((position.width - 100)/2, (position.height - 20)/2, 100, 20), "NO ION MAP LIST");
 				return;
 			}
 		}
 
 		if(map == null) SetTargetMap(0);
 
-		GL.Label("Radius:");
-		radiusIndex = GL.Toolbar(radiusIndex, radiusLabels);
+		behaviour = (IonBehaviour)EGL.EnumPopup("Behaviour:", behaviour);
+
+		radiusIndex = EGL.IntSlider("Radius:", radiusIndex, 0, 200);
 
 		GL.Label("Subdivision:");
 		subdivIndex = GL.Toolbar(subdivIndex, subdivLabels);
-
-		GL.Label("Levels:");
-		numLevelsIndex = GL.Toolbar(numLevelsIndex, numLevelsLabels);
 
 		bool prevEditingState = isEditing;
 		GL.BeginHorizontal();
@@ -100,20 +96,19 @@ public class AtomToolWindow : EditorWindow
 		if(prevTarget != targetMapIndex) SetTargetMap(targetMapIndex);
 		GL.EndHorizontal();
 
-		radius = radiusOptions[radiusIndex];
+		radius = radiusIndex*baseRadiusUnit;
 		subdiv = subdivOptions[subdivIndex];
-		numLevels = numLevelsIndex + 1;
 	}
 
 
 	public void OnSceneGUI(SceneView sceneView){
 		Event e = Event.current;
-		Vector2 mousePos = EditorToWorldPoint(e.mousePosition);
+		Vector2 mousePos = AtomToolWindow.EditorToWorldPoint(e.mousePosition);
 
 		if(toBePlaced == null){
 			if(e.type == EventType.MouseDown && e.button == 0){
-				toBePlaced = Instantiate(AssetDatabase.LoadAssetAtPath<Atom>("Assets/Prefabs/Atom.prefab")).GetComponent<Atom>();
-				toBePlaced.Init(radius*baseRadiusUnit, numLevels);
+				toBePlaced = Instantiate(AssetDatabase.LoadAssetAtPath<Ion>("Assets/Prefabs/Ion.prefab")).GetComponent<Ion>();
+				toBePlaced.Init(behaviour, radius*baseRadiusUnit);
 				//Debug.Log("PREVIEW");
 			}else if(e.type == EventType.MouseDrag && e.button == 1){
 				foreach(Transform t in map){
@@ -134,32 +129,50 @@ public class AtomToolWindow : EditorWindow
 				return;
 			}
 
+
+
 			Atom anchor = null;
-			Vector2 placePoint; // <-- goal is to obtain this
+			Vector2 placePoint = mousePos; // <-- goal is to obtain this
 
-			if(map.transform.childCount > 0){
-				Atom closest = null;
-				float closestDist = float.MaxValue;
-				foreach(Transform t in map){
-					Atom a = t.GetComponent<Atom>();
-					float dist = Mathf.Abs(((Vector2)a.transform.position - mousePos).sqrMagnitude - a.OuterRadius*a.OuterRadius);
-					if(dist < closestDist){
-						closest = a;
-						closestDist = dist;
+			switch(behaviour){
+				case IonBehaviour.Orbit:
+					if(map.transform.childCount > 0){
+						Atom closest = null;
+						int closestLevel = 0;
+						float closestDist = float.MaxValue;
+
+						foreach(Transform t in map){
+							Atom a = t.GetComponent<Atom>();
+
+							for(int l = 0; l < a.radii.Length; l++){
+								float dist = Mathf.Abs(((Vector2)a.transform.position - mousePos).sqrMagnitude - a.radii[l]*a.radii[l]);
+								if(dist < closestDist){
+									closest = a;
+									closestLevel = l;
+									closestDist = dist;
+								}
+							}
+							
+						}
+
+						if(closestDist < anchorSnapThresh){
+							anchor = closest;
+							Vector2 snapDir = AtomToolWindow.GetSnapDir(anchor, mousePos, subdiv);
+							placePoint = (Vector2)anchor.transform.position + snapDir*(anchor.radii[closestLevel]);
+
+							toBePlaced.parent = anchor;
+							toBePlaced.initAngle = Util.VectorAngle(snapDir);
+							toBePlaced.orbitLevel = closestLevel;
+						}
 					}
-				}
+				break;
 
-				if(closestDist < anchorSnapThresh){
-					anchor = closest;
-				}
+				default:
+
+				break;
 			}
 
-			if(anchor != null){
-				Vector2 snapDir = GetSnapDir(anchor, mousePos, subdiv);
-				placePoint = (Vector2)anchor.transform.position + snapDir*(anchor.OuterRadius + radius);
-			}else{
-				placePoint = mousePos;
-			}
+			
 
 			toBePlaced.transform.position = (Vector3)placePoint;
 
@@ -180,20 +193,6 @@ public class AtomToolWindow : EditorWindow
 
 	public void SetTargetMap(int i){
 		map = mapHolder.GetChild(i);
-	}
-
-	public static Vector2 GetSnapDir(Atom anchor, Vector2 mousePos, int subdiv){
-		Vector2 anchorPos = (Vector2)anchor.transform.position;
-		float mouseAngle = Util.VectorAngle(mousePos - anchorPos);
-		float divAngle = 2*Mathf.PI/subdiv;
-		int pNum = (int)((mouseAngle + divAngle/2)/divAngle);
-		return new Vector2(Mathf.Cos(divAngle*pNum), Mathf.Sin(divAngle*pNum));
-	}
-
-
-	public static Vector2 EditorToWorldPoint(Vector2 rawPos){
-		rawPos.y = SceneView.currentDrawingSceneView.camera.pixelHeight - rawPos.y;
-		return SceneView.currentDrawingSceneView.camera.ScreenToWorldPoint(rawPos);
 	}
 
 }
