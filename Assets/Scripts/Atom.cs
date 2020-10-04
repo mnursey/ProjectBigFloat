@@ -5,8 +5,9 @@ using UnityEditor;
 
 public class Atom : MonoBehaviour{
 
-	public static float levelSpacing = 1.5f;
+	public static float baseLevelSpacing = 0.6f;
 
+	public GameManager GM;
 	public float[] radii;
 	public int numLevels;
 	public AtomVisualController[] visualizers;
@@ -30,6 +31,7 @@ public class Atom : MonoBehaviour{
 	//}
 
 	public void Init(float r, int l){
+		if(GM == null) GM = GameObject.Find("Game Manager").GetComponent<GameManager>();
 		numLevels = l;
 		radii = new float[numLevels];
 		visualizers = new AtomVisualController[numLevels];
@@ -50,9 +52,13 @@ public class Atom : MonoBehaviour{
 
 	void Update(){
 		OuterRadius = radiusDebug;
+		foreach(AtomVisualController avc in visualizers){
+			avc.pulseFrequency = GM.BPS;
+		}
 	}
 
     private void SetRadii(float outer){
+    	float levelSpacing = baseLevelSpacing * Mathf.Pow(outer, 0.3f);
     	for(int i = 0; i < numLevels; i++){
     		radii[i] = outer - levelSpacing*i;
     		visualizers[i].transform.localScale = new Vector3(radii[i], radii[i], 1);
