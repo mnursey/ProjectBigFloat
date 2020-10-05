@@ -25,20 +25,20 @@ public class EndVisualManager : MonoBehaviour
 
     public float finishedRadius = 1f;
 
+    GameManager gm;
+    MenuController mc;
+
     // Start is called before the first frame update
     void Start()
     {
         lv = GetComponentInChildren<LineVisual>();
         avc = GetComponentInChildren<AtomVisualController>();
         lrs = GetComponentsInChildren<LineRenderer>().ToList();
+        gm = GameManager.GetGM();
+        mc = MenuController.GetMC();
 
-        if(player == null)
-        {
-            Debug.LogError("End Visual Manager needs player reference");
-        } else
-        {
-            playerScript = player.GetComponent<Player>();
-        }
+        player = gm.player.gameObject;
+        playerScript = gm.player;
     }
 
     // Update is called once per frame
@@ -74,8 +74,9 @@ public class EndVisualManager : MonoBehaviour
             playerScript.freq = 0;
             player.transform.position = transform.position;
 
-            // TODO
-            // Show next level menu
+            gm.EnterMenuMode();
+            mc.UpdateFinalScore(gm.score);
+            mc.GoToNextLevelMenu();
         }
     }
 }
