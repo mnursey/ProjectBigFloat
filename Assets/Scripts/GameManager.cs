@@ -34,6 +34,7 @@ public class GameManager : MonoBehaviour
     		LevelData l = t.GetComponent<LevelData>();
     		levels.Add(l);
     		l.map.gameObject.SetActive(false);
+    		l.ionMap.gameObject.SetActive(false);
 
     	}
 
@@ -64,6 +65,7 @@ public class GameManager : MonoBehaviour
     	score = 5000;
 
     	currentLevel.map.gameObject.SetActive(true);
+    	currentLevel.ionMap.gameObject.SetActive(true);
 
     	player.gameObject.SetActive(true);
     	player.PrepareForLevelStart(currentLevel.map, currentLevel.startAtom, currentLevel.startAngle, currentLevel.frequency);
@@ -81,10 +83,26 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel(){
     	player.enabled = true;
+
+    	foreach(Transform t in currentLevel.ionMap){
+    		Ion ion = t.GetComponent<Ion>();
+    		ion.Reset();
+    	}
     }
 
     public void DamagePlayer(){
-    	
+
+    }
+
+    public void PlayerJump(Atom prev, Atom next){
+    	score += 100;
+
+    	foreach(Transform t in currentLevel.ionMap){
+    		Ion ion = t.GetComponent<Ion>();
+    		if(ion.resetTrigger != null && ion.resetTrigger.transform == next.transform){
+    			ion.Reset();
+    		}
+    	}
     }
 
     void Update(){

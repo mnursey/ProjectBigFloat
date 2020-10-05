@@ -11,7 +11,7 @@ public enum IonBehaviour{
 public class Ion : MonoBehaviour
 {
     public GameManager GM;
-    
+
     public IonBehaviour behaviour;
     public float radius;
     public bool touchingPlayer;
@@ -43,6 +43,8 @@ public class Ion : MonoBehaviour
 
 
     public void Reset(){
+    	enabled = true;
+
     	switch(behaviour){
     		case IonBehaviour.Orbit:
     			angle = initAngle;

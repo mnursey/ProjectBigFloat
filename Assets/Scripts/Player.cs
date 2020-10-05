@@ -95,6 +95,8 @@ public class Player : MonoBehaviour {
 	}
 
 	void Jump(Atom newParent, int dirMod){
+		GM.PlayerJump(parent, newParent);
+
 		level = 0;
 		direction *= dirMod;
 		Vector2 atomDisp = (Vector2)(parent.transform.position - newParent.transform.position);
@@ -102,9 +104,6 @@ public class Player : MonoBehaviour {
 
 		angle = QuantizeAngle(Util.VectorAngle((Vector2)(transform.position - newParent.transform.position)),
 				Util.VectorAngle(atomDisp));
-		
-
-		GM.score += 100;
 	}
 
 

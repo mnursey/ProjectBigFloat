@@ -182,12 +182,12 @@ public class AtomToolWindow : EditorWindow
 		map = mapHolder.GetChild(i);
 	}
 
-	public static Vector2 GetSnapDir(Atom anchor, Vector2 mousePos, int subdiv){
+	public static Vector2 GetSnapDir(Atom anchor, Vector2 mousePos, int subdiv, float offset = 0){
 		Vector2 anchorPos = (Vector2)anchor.transform.position;
 		float mouseAngle = Util.VectorAngle(mousePos - anchorPos);
 		float divAngle = 2*Mathf.PI/subdiv;
-		int pNum = (int)((mouseAngle + divAngle/2)/divAngle);
-		return new Vector2(Mathf.Cos(divAngle*pNum), Mathf.Sin(divAngle*pNum));
+		int pNum = (int)((mouseAngle - offset + divAngle/2)/divAngle);
+		return new Vector2(Mathf.Cos(divAngle*pNum + offset) , Mathf.Sin(divAngle*pNum + offset));
 	}
 
 
