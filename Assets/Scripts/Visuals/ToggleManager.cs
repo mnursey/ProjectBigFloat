@@ -20,6 +20,9 @@ public class ToggleManager : MonoBehaviour
     bool prevFrameInRadius = false;
 
     public List<Atom> affectedAtoms = new List<Atom>();
+    List<RopeVisual> ropeInstances = new List<RopeVisual>();
+
+    public GameObject ropePrefab;
 
     // Start is called before the first frame update
     void Start()
@@ -38,7 +41,15 @@ public class ToggleManager : MonoBehaviour
         foreach (Atom a in affectedAtoms)
         {
             a.colour = colour;
-            //a.poweredColour = toggledColour;
+
+            RopeVisual rp = (Instantiate(ropePrefab)).GetComponent<RopeVisual>();
+
+            rp.ropeColor = colour;
+            rp.transform.position = transform.position;
+            rp.endPos = a.transform.position;
+            rp.numSegments = Mathf.RoundToInt((transform.position - a.transform.position).magnitude * 1.3f / rp.segmentLength);
+
+            ropeInstances.Add(rp);
         }
     }
 
@@ -52,6 +63,11 @@ public class ToggleManager : MonoBehaviour
                 lr.startColor = toggledColour;
                 lr.endColor = toggledColour;
             }
+
+            foreach (RopeVisual rp in ropeInstances)
+            {
+                rp.ropeColor = toggledColour;
+            }
         }
         else
         {
@@ -59,6 +75,11 @@ public class ToggleManager : MonoBehaviour
             {
                 lr.startColor = colour;
                 lr.endColor = colour;
+            }
+
+            foreach(RopeVisual rp in ropeInstances)
+            {
+                rp.ropeColor = colour;
             }
         }
 
