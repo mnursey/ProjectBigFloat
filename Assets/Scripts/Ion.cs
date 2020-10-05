@@ -51,7 +51,6 @@ public class Ion : MonoBehaviour
 
 
     public void Reset(){
-    	enabled = true;
     	SetVisible(true);
 
     	switch(behaviour){
@@ -99,8 +98,9 @@ public class Ion : MonoBehaviour
     			if(type == IonType.Negative){
 	    			GM.DamagePlayer();
 	    		}else{
-	    			GM.score += 500;
+	    			GM.GetPickup();
 	    			SetVisible(false);
+	    			enabled = false;
 	    		}
 
 	    		touchingPlayer = true;

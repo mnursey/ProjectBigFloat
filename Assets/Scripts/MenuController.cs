@@ -14,8 +14,10 @@ public class MenuController : MonoBehaviour
     public GameObject currentMenu;
 
     public AudioSource clickSoundEffect;
-
     public Text finalScoreText;
+
+    public int currentBGColour;
+    public Color[] menuColours;
 
     public void Start()
     {
@@ -37,6 +39,11 @@ public class MenuController : MonoBehaviour
 
         menu.SetActive(true);
         currentMenu = menu;
+
+        int r = (int)(Random.value*menuColours.Length);
+        if(r == currentBGColour) r = (r+1)%menuColours.Length;
+        currentBGColour = r;
+        GameManager.GetGM().SetBGColour(menuColours[currentBGColour]);
 
         if(click) clickSoundEffect.Play();
     }

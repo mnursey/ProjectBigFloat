@@ -25,8 +25,9 @@ public class GameManager : MonoBehaviour
     public int maxScore = 100000; 
 
     float BGSaturationBonus;
+    Color BGTintColour;
+    public float BGTintAmp;
     public float BGSaturationBonusDamp;
-
 
     bool waitingForLevelStart;
     float levelStartTime;
@@ -34,8 +35,7 @@ public class GameManager : MonoBehaviour
     public float musicPositionSec;
     //[HideInInspector]
     public int pulsesPerBeat;
-
-
+   	
     //temp
     void Start(){
     	levels.Clear();
@@ -46,7 +46,6 @@ public class GameManager : MonoBehaviour
     		l.map.gameObject.SetActive(false);
     		l.ionMap.gameObject.SetActive(false);
             l.specialsMap.gameObject.SetActive(false);
-
     	}
 
     	if(player == null) player = GameObject.Find("Player").GetComponent<Player>();
@@ -114,6 +113,7 @@ public class GameManager : MonoBehaviour
 
     	foreach(Transform t in level.ionMap){
     		Ion ion = t.GetComponent<Ion>();
+    		ion.Reset();
     		ion.SetVisible(true);
     	}
 
@@ -140,7 +140,7 @@ public class GameManager : MonoBehaviour
 
     	foreach(Transform t in currentLevel.ionMap){
     		Ion ion = t.GetComponent<Ion>();
-    		ion.Reset();
+    		ion.enabled = true;
     	}
 
         ResetSpecialsMap();
@@ -153,6 +153,8 @@ public class GameManager : MonoBehaviour
     public void PlayerJump(Atom prev, Atom next){
     	score += 100;
     	BGSaturationBonus = 0.4f;
+    	scoreController.Shake(20, 0.5f, 0.9f);
+
 
     	foreach(Transform t in currentLevel.ionMap){
     		Ion ion = t.GetComponent<Ion>();
@@ -162,9 +164,22 @@ public class GameManager : MonoBehaviour
     	}
     }
 
+    public void GetPickup(){
+    	score += 500;
+    	BGTintAmp = 1f;
+    	scoreController.Shake(40, 0.5f, 0.9f);
+    }
+
+    public Color GetBGColour(){
+    	return BG.GetColor("Color_A528FD8E");
+    }
+
     public void SetBGColour(Color c){
-    	//BG.SetColor("Color_1432EB74", currentLevel.BGColour1);
     	BG.SetColor("Color_A528FD8E", c);
+    }
+
+    public void SetBGColour2(Color c){
+    	BG.SetColor("Color_1432EB74", c);
     }
 
     public void SetBGSaturation(float s){
@@ -187,6 +202,9 @@ public class GameManager : MonoBehaviour
 		    	float saturation = Mathf.Min(0.1f + Mathf.Pow(score/(float)maxScore, 0.7f), 0.8f);
 		    	SetBGSaturation(Mathf.Min(saturation + BGSaturationBonus, 1));
 		    	BGSaturationBonus *= BGSaturationBonusDamp;
+
+		    	SetBGColour2(Color.white*BGTintAmp);
+		    	BGTintAmp *= BGSaturationBonusDamp;
 		    }
 
 	    	if(Input.GetKeyDown("space")){
