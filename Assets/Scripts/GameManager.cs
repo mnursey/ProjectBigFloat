@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour
     	foreach(LevelData l in levels){
     		l.map.gameObject.SetActive(false);
     		l.ionMap.gameObject.SetActive(false);
+    		l.specialsMap.gameObject.SetActive(false);
     	}
 
     	player.gameObject.SetActive(false);
