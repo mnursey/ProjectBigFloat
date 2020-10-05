@@ -24,25 +24,23 @@ public class ToggleManager : MonoBehaviour
 
     public GameObject ropePrefab;
 
+    GameManager gm;
+
     // Start is called before the first frame update
     void Start()
     {
         lrs = GetComponentsInChildren<LineRenderer>().ToList();
 
-        if (player == null)
-        {
-            Debug.LogError("Toggle manager needs player reference");
-        }
-        else
-        {
-            playerScript = player.GetComponent<Player>();
-        }
+        gm = GameManager.GetGM();
+
+        player = gm.player.gameObject;
+        playerScript = gm.player;
 
         foreach (Atom a in affectedAtoms)
         {
             a.colour = colour;
 
-            RopeVisual rp = (Instantiate(ropePrefab)).GetComponent<RopeVisual>();
+            RopeVisual rp = (Instantiate(ropePrefab, this.transform)).GetComponent<RopeVisual>();
 
             rp.ropeColor = colour;
             rp.transform.position = transform.position;
@@ -51,6 +49,8 @@ public class ToggleManager : MonoBehaviour
 
             ropeInstances.Add(rp);
         }
+
+        Reset();
     }
 
     // Update is called once per frame
@@ -91,7 +91,7 @@ public class ToggleManager : MonoBehaviour
 
                 foreach (Atom a in affectedAtoms)
                 {
-                    a.powered = !a.powered;
+                    a.powered = toggled;
                 }
             }
 
@@ -100,6 +100,14 @@ public class ToggleManager : MonoBehaviour
         else
         {
             prevFrameInRadius = false;
+        }
+    }
+
+    public void Reset()
+    {
+        foreach (Atom a in affectedAtoms)
+        {
+            a.powered = toggled;
         }
     }
 }
