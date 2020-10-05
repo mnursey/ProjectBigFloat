@@ -42,6 +42,11 @@ public class GameManager : MonoBehaviour
     	foreach(Transform t in transform){
     		LevelData l = t.GetComponent<LevelData>();
     		levels.Add(l);
+
+    		l.map.gameObject.SetActive(false);
+    		l.ionMap.gameObject.SetActive(false);
+            l.specialsMap.gameObject.SetActive(false);
+
     	}
 
     	if(player == null) player = GameObject.Find("Player").GetComponent<Player>();
@@ -104,6 +109,7 @@ public class GameManager : MonoBehaviour
 
     	currentLevel.map.gameObject.SetActive(true);
     	currentLevel.ionMap.gameObject.SetActive(true);
+        currentLevel.specialsMap.gameObject.SetActive(true);
 
     	foreach(Transform t in level.ionMap){
     		Ion ion = t.GetComponent<Ion>();
@@ -112,7 +118,9 @@ public class GameManager : MonoBehaviour
 
     	player.gameObject.SetActive(true);
     	player.PrepareForLevelStart(level.map, level.startAtom, level.startAngle, level.frequency);
-    	
+
+        ResetSpecialsMap();
+
     	camera.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
     	camera.enabled = true;
     	
@@ -133,6 +141,8 @@ public class GameManager : MonoBehaviour
     		Ion ion = t.GetComponent<Ion>();
     		ion.Reset();
     	}
+
+        ResetSpecialsMap();
     }
 
     public void DamagePlayer(){
@@ -196,6 +206,25 @@ public class GameManager : MonoBehaviour
     	return GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
+    void ResetSpecialsMap()
+    {
+        foreach(Transform t in currentLevel.specialsMap)
+        {
+            // Reset ends
+            EndVisualManager end = t.GetComponent<EndVisualManager>();
 
+            if(end != null)
+            {
+                end.finished = false;
+            }
 
+            // Reset toggles
+            ToggleManager toggle = t.GetComponent<ToggleManager>();
+
+            if(toggle != null)
+            {
+                toggle.toggled = false;
+            }
+        }
+    }
 }
