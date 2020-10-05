@@ -25,16 +25,21 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
-     inkscape:cx="320.071"
-     inkscape:cy="643.83906"
+     inkscape:cx="267.54307"
+     inkscape:cy="657.9812"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
      inkscape:window-width="1159"
      inkscape:window-height="730"
-     inkscape:window-x="260"
-     inkscape:window-y="260"
-     inkscape:window-maximized="0" />
+     inkscape:window-x="51"
+     inkscape:window-y="196"
+     inkscape:window-maximized="0"
+     inkscape:snap-bbox="true"
+     inkscape:bbox-paths="true"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="true"
+     inkscape:snap-bbox-midpoints="true" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -52,32 +57,52 @@
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:none;stroke:#ffffff;stroke-width:30;stroke-miterlimit:4;stroke-dasharray:none"
-       id="rect2985"
-       width="320.3544"
-       height="197.9899"
-       x="181.82745"
-       y="164.4381"
+       style="fill:none;fill-opacity:1;fill-rule:evenodd;stroke:none"
+       id="rect3778"
+       width="470.10229"
+       height="470.10229"
+       x="103.69885"
+       y="26.714476"
+       rx="25.253819"
        ry="33.335037"
-       rx="25.253817"
        inkscape:export-filename="D:\Desktop\BigFloat\ProjectBigFloat\Assets\Textures\rect3755.png"
-       inkscape:export-xdpi="289.73999"
-       inkscape:export-ydpi="289.73999" />
-    <path
-       style="fill:none;stroke:#ffffff;stroke-width:20;stroke-miterlimit:4"
-       d="m 506.59148,196.63728 30.44062,0 c 14.83005,0 26.76905,9.46109 26.76905,21.21321 l 0,88.51405 c 0,11.75211 -11.939,21.2132 -26.76905,21.2132 l -30.44062,0 z"
-       id="rect3755"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="csssscc"
+       inkscape:export-xdpi="196.04243"
+       inkscape:export-ydpi="196.04243" />
+    <g
+       id="g3780"
+       transform="translate(-31.564302,-1.6674213)"
        inkscape:export-filename="D:\Desktop\BigFloat\ProjectBigFloat\Assets\Textures\rect3755.png"
-       inkscape:export-xdpi="289.73999"
-       inkscape:export-ydpi="289.73999" />
-    <path
-       style="fill:#ffffff;stroke:none"
-       d="M 343.96875 205.40625 L 205.84375 262.09375 L 303.46875 262.09375 L 333.53125 318.125 L 471.65625 261.4375 L 374.03125 261.4375 L 343.96875 205.40625 z "
-       id="path3767"
-       inkscape:export-filename="D:\Desktop\BigFloat\ProjectBigFloat\Assets\Textures\rect3755.png"
-       inkscape:export-xdpi="289.73999"
-       inkscape:export-ydpi="289.73999" />
+       inkscape:export-xdpi="196.04243"
+       inkscape:export-ydpi="196.04243">
+      <rect
+         inkscape:export-ydpi="289.73999"
+         inkscape:export-xdpi="289.73999"
+         inkscape:export-filename="D:\Desktop\BigFloat\ProjectBigFloat\Assets\Textures\rect3755.png"
+         rx="25.253817"
+         ry="33.335037"
+         y="164.4381"
+         x="181.82745"
+         height="197.9899"
+         width="320.3544"
+         id="rect2985"
+         style="fill:none;stroke:#ffffff;stroke-width:30;stroke-miterlimit:4;stroke-dasharray:none" />
+      <path
+         inkscape:export-ydpi="289.73999"
+         inkscape:export-xdpi="289.73999"
+         inkscape:export-filename="D:\Desktop\BigFloat\ProjectBigFloat\Assets\Textures\rect3755.png"
+         sodipodi:nodetypes="csssscc"
+         inkscape:connector-curvature="0"
+         id="rect3755"
+         d="m 506.59148,196.63728 30.44062,0 c 14.83005,0 26.76905,9.46109 26.76905,21.21321 l 0,88.51405 c 0,11.75211 -11.939,21.2132 -26.76905,21.2132 l -30.44062,0 z"
+         style="fill:none;stroke:#ffffff;stroke-width:20;stroke-miterlimit:4" />
+      <path
+         inkscape:export-ydpi="289.73999"
+         inkscape:export-xdpi="289.73999"
+         inkscape:export-filename="D:\Desktop\BigFloat\ProjectBigFloat\Assets\Textures\rect3755.png"
+         id="path3767"
+         d="m 343.96875,205.40625 -138.125,56.6875 97.625,0 30.0625,56.03125 138.125,-56.6875 -97.625,0 -30.0625,-56.03125 z"
+         style="fill:#ffffff;stroke:none"
+         inkscape:connector-curvature="0" />
+    </g>
   </g>
 </svg>
