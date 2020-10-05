@@ -16,10 +16,18 @@ public class MenuController : MonoBehaviour
 
     public void Start()
     {
-        GoToMainMenu();
+        //GoToMainMenu();
     }
 
-    public void GoToMenu(GameObject menu)
+    public void CloseAllMenus(){
+        mainMenu.SetActive(false);
+        levelSelectMenu.SetActive(false);
+        nextLevelMenu.SetActive(false);
+        optionsMenu.SetActive(false);
+        creditsMenu.SetActive(false);
+    }
+
+    public void GoToMenu(GameObject menu, bool click = true)
     {
         if(currentMenu != null)
             currentMenu.SetActive(false);
@@ -27,7 +35,7 @@ public class MenuController : MonoBehaviour
         menu.SetActive(true);
         currentMenu = menu;
 
-        clickSoundEffect.Play();
+        if(click) clickSoundEffect.Play();
     }
 
     public void GoToMainMenu()

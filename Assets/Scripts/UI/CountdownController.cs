@@ -18,10 +18,9 @@ public class CountdownController : MonoBehaviour
 	public float pulseAmp;
 	public float pulseDamp;
     // Start is called before the first frame update
-    void Start(){
+    public void Init(){
         if(GM == null) GM = GameManager.GetGM();
         if(text == null) text = GetComponent<Text>();
-        text.enabled = false;
     }
 
     public void Set(float end){

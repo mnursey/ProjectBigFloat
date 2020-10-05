@@ -11,10 +11,14 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public float BPS;
 
+    bool gameMode;
+
     public Player player;
     public CameraController camera;
     public AudioSource music;
     public CountdownController countdown;
+    public ScoreController scoreController;
+    public MenuController menu;
     public Material BG;
 
     public int score;
@@ -38,51 +42,78 @@ public class GameManager : MonoBehaviour
     	foreach(Transform t in transform){
     		LevelData l = t.GetComponent<LevelData>();
     		levels.Add(l);
-    		l.map.gameObject.SetActive(false);
-    		l.ionMap.gameObject.SetActive(false);
-
     	}
 
     	if(player == null) player = GameObject.Find("Player").GetComponent<Player>();
     	if(camera == null) camera = GameObject.Find("Main Camera").GetComponent<CameraController>();
     	if(music == null) music = GameObject.Find("Music Source").GetComponent<AudioSource>();
     	if(countdown == null) countdown = GameObject.Find("Countdown").GetComponent<CountdownController>();
+    	if(scoreController == null) scoreController = GameObject.Find("Score").GetComponent<ScoreController>();
+    	if(menu == null) menu = GameObject.Find("MenuController").GetComponent<MenuController>();
     	if(BG == null) BG = camera.transform.GetChild(0).GetComponent<MeshRenderer>().material;
 
     	player.camera = camera;
     	camera.player = player;
-    	player.gameObject.SetActive(false);
-    	camera.enabled = false;
-    	music.Stop();
 
-    	//PreStartLevel(0);	
+    	EnterMenuMode();
+    	menu.GoToMenu(menu.mainMenu, false);
     }
 
-    public void PreStartLevel(int i){
-    	currentLevel = levels[i];
+    public void EnterMenuMode(){
+    	foreach(LevelData l in levels){
+    		l.map.gameObject.SetActive(false);
+    		l.ionMap.gameObject.SetActive(false);
+    	}
 
+    	player.gameObject.SetActive(false);
+    	camera.enabled = false;
+
+    	music.Stop();
+
+    	countdown.Init();
+    	countdown.text.enabled = false;
+
+    	scoreController.Init();
+    	scoreController.text.enabled = false;
+
+    	gameMode = false;
+    }
+
+    public void EnterGameMode(){
+    	menu.CloseAllMenus();
+    	gameMode = true;
+    }
+
+    public void EnterLevel(int i){
+    	currentLevel = levels[i];
+    	EnterGameMode();
+    	PreStartLevel(currentLevel);
+    }
+
+    public void PreStartLevel(LevelData level){
     	foreach(LevelData ld in levels){
     		ld.map.gameObject.SetActive(false);
     	}
 
-    	BPM = currentLevel.BPM;
+    	BPM = level.BPM;
     	BPS = BPM/60f;
 
     	score = 5000;
 
-    	SetBGColour(currentLevel.BGColour);
+    	SetBGColour(level.BGColour);
 
     	currentLevel.map.gameObject.SetActive(true);
     	currentLevel.ionMap.gameObject.SetActive(true);
 
-    	foreach(Transform t in currentLevel.ionMap){
+    	foreach(Transform t in level.ionMap){
     		Ion ion = t.GetComponent<Ion>();
     		ion.SetVisible(true);
     	}
 
     	player.gameObject.SetActive(true);
-    	player.PrepareForLevelStart(currentLevel.map, currentLevel.startAtom, currentLevel.startAngle, currentLevel.frequency);
+    	player.PrepareForLevelStart(level.map, level.startAtom, level.startAngle, level.frequency);
     	
+    	camera.transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);
     	camera.enabled = true;
     	
     	music.clip = currentLevel.music;
@@ -96,6 +127,7 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel(){
     	player.enabled = true;
+    	scoreController.text.enabled = true;
 
     	foreach(Transform t in currentLevel.ionMap){
     		Ion ion = t.GetComponent<Ion>();
@@ -104,7 +136,7 @@ public class GameManager : MonoBehaviour
     }
 
     public void DamagePlayer(){
-    	PreStartLevel(0);
+    	PreStartLevel(currentLevel);
     }
 
     public void PlayerJump(Atom prev, Atom next){
@@ -132,29 +164,32 @@ public class GameManager : MonoBehaviour
     }
 
     void Update(){
-    	if(currentLevel != null){
-    		musicPositionSec = music.time + 2 - currentLevel.firstBeatDelay;
+    	if(gameMode){
+    		if(currentLevel != null){
+	    		musicPositionSec = music.time + 2 - currentLevel.firstBeatDelay;
 
-	    	if(waitingForLevelStart && Time.time > levelStartTime){
-	    		waitingForLevelStart = false;
-	    		StartLevel();
+		    	if(waitingForLevelStart && Time.time > levelStartTime){
+		    		waitingForLevelStart = false;
+		    		StartLevel();
+		    	}
+
+		    	float saturation = Mathf.Min(0.1f + Mathf.Pow(score/(float)maxScore, 0.7f), 0.8f);
+		    	SetBGSaturation(Mathf.Min(saturation + BGSaturationBonus, 1));
+		    	BGSaturationBonus *= BGSaturationBonusDamp;
+		    }
+
+	    	if(Input.GetKeyDown("space")){
+	    		PreStartLevel(currentLevel);
 	    	}
 
-	    	float saturation = Mathf.Min(0.1f + Mathf.Pow(score/(float)maxScore, 0.7f), 0.8f);
-	    	SetBGSaturation(Mathf.Min(saturation + BGSaturationBonus, 1));
-	    	BGSaturationBonus *= BGSaturationBonusDamp;
-	    }
+	    	if(Input.GetKeyDown("escape")){
+	    		EnterMenuMode();
+	    		menu.GoToMenu(menu.levelSelectMenu);
+	    	}
 
-    	if(Input.GetKeyDown("space")){
-    		//temp
-    		PreStartLevel(0);
+	    	score -= (int)(100*Time.deltaTime);
     	}
-
-    	if(Input.GetMouseButtonDown(1)){
-    		//Debug.Log(musicPositionSec*BPS - (int)(musicPositionSec*BPS));
-    	}
-
-    	score -= (int)(100*Time.deltaTime);
+    	
     }
 
     public static GameManager GetGM(){

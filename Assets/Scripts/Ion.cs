@@ -82,6 +82,7 @@ public class Ion : MonoBehaviour
     			float velocity = GM.BPS*(2*Mathf.PI)*orbitFreq;
 				angle = angle + velocity*Time.deltaTime/parent.OuterRadius;
 				transform.position = (Vector3)((Vector2)parent.transform.position + parent.radii[orbitLevel] * new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)));
+    			transform.eulerAngles = new Vector3(0, 0, angle*Mathf.Rad2Deg);
     		break;
 
     		case IonBehaviour.Follow:
@@ -93,7 +94,7 @@ public class Ion : MonoBehaviour
     		break;
     	}
 
-    	if((GM.player.transform.position - transform.position).magnitude < radius*ionRadiusScaleFactor*((type == IonType.Negative) ? 1 : 0.3f)){
+    	if((GM.player.transform.position - transform.position).magnitude < radius*ionRadiusScaleFactor*((type == IonType.Negative) ? 1 : 0.1f)){
     		if(!touchingPlayer){
     			if(type == IonType.Negative){
 	    			GM.DamagePlayer();

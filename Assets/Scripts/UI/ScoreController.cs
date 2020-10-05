@@ -11,8 +11,9 @@ public class ScoreController : MonoBehaviour
 
 	public float pulseAmp;
 	public float wiggleAmp;
+
     // Start is called before the first frame update
-    void Start(){
+    public void Init(){
         if(GM == null) GM = GameManager.GetGM();
         if(text == null) text = GetComponent<Text>();
     }
