@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
     		levels.Add(l);
     		l.map.gameObject.SetActive(false);
     		l.ionMap.gameObject.SetActive(false);
+            l.specialsMap.gameObject.SetActive(false);
 
     	}
 
@@ -74,13 +75,16 @@ public class GameManager : MonoBehaviour
 
     	currentLevel.map.gameObject.SetActive(true);
     	currentLevel.ionMap.gameObject.SetActive(true);
+        currentLevel.specialsMap.gameObject.SetActive(true);
 
     	foreach(Transform t in currentLevel.ionMap){
     		Ion ion = t.GetComponent<Ion>();
     		ion.SetVisible(true);
     	}
 
-    	player.gameObject.SetActive(true);
+        ResetSpecialsMap();
+
+        player.gameObject.SetActive(true);
     	player.PrepareForLevelStart(currentLevel.map, currentLevel.startAtom, currentLevel.startAngle, currentLevel.frequency);
     	
     	camera.enabled = true;
@@ -101,6 +105,8 @@ public class GameManager : MonoBehaviour
     		Ion ion = t.GetComponent<Ion>();
     		ion.Reset();
     	}
+
+        ResetSpecialsMap();
     }
 
     public void DamagePlayer(){
@@ -161,6 +167,25 @@ public class GameManager : MonoBehaviour
     	return GameObject.Find("Game Manager").GetComponent<GameManager>();
     }
 
+    void ResetSpecialsMap()
+    {
+        foreach(Transform t in currentLevel.specialsMap)
+        {
+            // Reset ends
+            EndVisualManager end = t.GetComponent<EndVisualManager>();
 
+            if(end != null)
+            {
+                end.finished = false;
+            }
 
+            // Reset toggles
+            ToggleManager toggle = t.GetComponent<ToggleManager>();
+
+            if(toggle != null)
+            {
+                toggle.toggled = false;
+            }
+        }
+    }
 }

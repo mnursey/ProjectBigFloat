@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class MenuController : MonoBehaviour
     public GameObject currentMenu;
 
     public AudioSource clickSoundEffect;
+
+    public Text finalScoreText;
 
     public void Start()
     {
@@ -63,5 +66,10 @@ public class MenuController : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    public void UpdateFinalScore(int score)
+    {
+        finalScoreText.text = "Final Score\n" + score;
     }
 }
