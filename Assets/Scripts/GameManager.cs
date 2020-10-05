@@ -243,6 +243,7 @@ public class GameManager : MonoBehaviour
             if(toggle != null)
             {
                 toggle.toggled = false;
+                toggle.Reset();
             }
         }
     }
