@@ -20,6 +20,7 @@ public class IonToolWindow : EditorWindow
 	public static float baseRadiusUnit = 0.1f; // This will eventually be determined by BPM and such
 	public static float anchorSnapThresh = 10;
 
+	public IonType type;
 	public IonBehaviour behaviour;
     public float radius;
     public int subdiv;
@@ -74,6 +75,7 @@ public class IonToolWindow : EditorWindow
  	}
 
 	public void OnGUI(){
+		EditorGUIUtility.labelWidth = 75;
 		if(atomMapHolder == null){
 			atomMapHolder = GameObject.Find("Atom Map List").transform;
 			if(atomMapHolder == null){
@@ -92,13 +94,15 @@ public class IonToolWindow : EditorWindow
 
 		if(atomMap == null || ionMap == null) SetTargetMap(0);
 
+		GL.BeginHorizontal();
+		type = (IonType)EGL.EnumPopup("Ion Type:", type);
 		behaviour = (IonBehaviour)EGL.EnumPopup("Behaviour:", behaviour);
+		GL.EndHorizontal();
 
 		radiusIndex = EGL.IntSlider("Radius:", radiusIndex, 0, 500);
 
 		GL.Label("Subdivision:");
 		subdivIndex = GL.Toolbar(subdivIndex, subdivLabels);
-
 		subdivOffset = EGL.IntField("Subdiv Offset:", subdivOffset);
 
 		if(behaviour == IonBehaviour.Orbit){
@@ -128,7 +132,8 @@ public class IonToolWindow : EditorWindow
 
 		if(toBePlaced == null){
 			if(e.type == EventType.MouseDown && e.button == 0){
-				toBePlaced = Instantiate(AssetDatabase.LoadAssetAtPath<Ion>("Assets/Prefabs/Ion.prefab")).GetComponent<Ion>();
+				string prefabName = (type == IonType.Negative) ? "Ion.prefab" : "PositiveIon.prefab";
+				toBePlaced = Instantiate(AssetDatabase.LoadAssetAtPath<Ion>("Assets/Prefabs/"+ prefabName)).GetComponent<Ion>();
 				toBePlaced.Init(behaviour, radius*baseRadiusUnit);
 				//Debug.Log("PREVIEW");
 			}else if(e.type == EventType.MouseDrag && e.button == 1){
@@ -181,6 +186,7 @@ public class IonToolWindow : EditorWindow
 
 							Vector2 snapDir = AtomToolWindow.GetSnapDir(anchor, mousePos, subdiv, subdivOffset*Mathf.Deg2Rad);
 							placePoint = (Vector2)anchor.transform.position + snapDir*(anchor.radii[closestLevel]);
+							toBePlaced.transform.eulerAngles = new Vector3(0, 0, Util.VectorAngle(snapDir)*Mathf.Rad2Deg);
 
 							toBePlaced.parent = anchor;
 							toBePlaced.initAngle = Util.VectorAngle(snapDir);
@@ -202,6 +208,7 @@ public class IonToolWindow : EditorWindow
 
 			if(e.type == EventType.MouseDown && e.button == 0){
 				toBePlaced.transform.SetParent(ionMap);
+				toBePlaced.initPos = toBePlaced.transform.position;
 				toBePlaced = null;
 				//Debug.Log("PLACED");
 			}

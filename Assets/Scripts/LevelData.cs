@@ -14,4 +14,5 @@ public class LevelData : MonoBehaviour
     public float firstBeatDelay;
     public float frequency;
     public AudioClip music;
+    public Color BGColour;
 }

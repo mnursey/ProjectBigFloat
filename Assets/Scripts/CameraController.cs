@@ -17,8 +17,10 @@ public class CameraController : MonoBehaviour{
 	public float hybridRadiusOffset;
 
 	public Player player;
+	public Camera camera;
 	Vector3 velocity;
 	Vector3 offsetVelocity;
+	float zoomVelocity;
 	Vector3 targetPos;
 	Vector3 basePos;
 	Vector3 offset;
@@ -31,6 +33,7 @@ public class CameraController : MonoBehaviour{
     // Start is called before the first frame update
     void Start(){
         if(player == null) player = GameObject.Find("Player").GetComponent<Player>();
+        if(camera == null) camera = GetComponent<Camera>();
         basePos = transform.position;
         offset = Vector3.zero;
     }
@@ -74,6 +77,9 @@ public class CameraController : MonoBehaviour{
         		transform.position = basePos + offset + (Vector3)shakeVector;
         	break;
         }
+
+        float targetCameraSize = Mathf.Max(8, 8 + (player.parent.OuterRadius-10)/2);
+        camera.orthographicSize = Mathf.SmoothDamp(camera.orthographicSize, targetCameraSize, ref zoomVelocity, 0.5f);
 
         //transform.position = Vector3.SmoothDamp(transform.position, targetPos, ref velocity, smoothTime);
     }

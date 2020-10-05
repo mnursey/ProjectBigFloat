@@ -2,16 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum IonType{
+	Positive,
+	Negative
+}
+
 public enum IonBehaviour{
-    	Static,
-    	Orbit, 
-    	Follow
-    }
+    Static,
+    Orbit, 
+    Follow
+   }
 
 public class Ion : MonoBehaviour
 {
+	public static float ionRadiusScaleFactor = 4;
+
     public GameManager GM;
 
+    public IonType type;
     public IonBehaviour behaviour;
     public float radius;
     public bool touchingPlayer;
@@ -44,6 +52,7 @@ public class Ion : MonoBehaviour
 
     public void Reset(){
     	enabled = true;
+    	SetVisible(true);
 
     	switch(behaviour){
     		case IonBehaviour.Orbit:
@@ -60,6 +69,10 @@ public class Ion : MonoBehaviour
 
     }
 
+    public void SetVisible(bool state){
+    	transform.GetChild(0).gameObject.SetActive(state);
+    }
+
 
     void Update(){
     	if(!enabled) return;
@@ -73,18 +86,24 @@ public class Ion : MonoBehaviour
 
     		case IonBehaviour.Follow:
     			Vector3 moveVector = (GM.player.transform.position - transform.position).normalized * followSpeed;
-    			transform.position += moveVector;
+    			transform.position += moveVector*Time.deltaTime;
     		break;
 
     		default:
     		break;
     	}
 
-    	if((GM.player.transform.position - transform.position).magnitude < radius){
+    	if((GM.player.transform.position - transform.position).magnitude < radius*ionRadiusScaleFactor*((type == IonType.Negative) ? 1 : 0.3f)){
     		if(!touchingPlayer){
-    			GM.DamagePlayer();
-    			touchingPlayer = true;
-    		}
+    			if(type == IonType.Negative){
+	    			GM.DamagePlayer();
+	    		}else{
+	    			GM.score += 500;
+	    			SetVisible(false);
+	    		}
+
+	    		touchingPlayer = true;
+	    	}
     	}else{
     		touchingPlayer = false;
     	}

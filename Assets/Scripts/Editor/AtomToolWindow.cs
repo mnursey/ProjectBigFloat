@@ -21,6 +21,7 @@ public class AtomToolWindow : EditorWindow
     public int radius;
     public int subdiv;
     public int numLevels;
+    public int subdivOffset;
     
     int radiusIndex;
     int subdivIndex;
@@ -85,6 +86,7 @@ public class AtomToolWindow : EditorWindow
 
 		GL.Label("Subdivision:");
 		subdivIndex = GL.Toolbar(subdivIndex, subdivLabels);
+		subdivOffset = EGL.IntField("Subdiv Offset:", subdivOffset);
 
 		GL.Label("Levels:");
 		numLevelsIndex = GL.Toolbar(numLevelsIndex, numLevelsLabels);
@@ -155,7 +157,7 @@ public class AtomToolWindow : EditorWindow
 			}
 
 			if(anchor != null){
-				Vector2 snapDir = GetSnapDir(anchor, mousePos, subdiv);
+				Vector2 snapDir = GetSnapDir(anchor, mousePos, subdiv, subdivOffset*Mathf.Deg2Rad);
 				placePoint = (Vector2)anchor.transform.position + snapDir*(anchor.OuterRadius + radius);
 			}else{
 				placePoint = mousePos;

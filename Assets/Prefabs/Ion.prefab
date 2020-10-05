@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GM: {fileID: 0}
+  type: 1
   behaviour: 0
   radius: 0
   touchingPlayer: 0

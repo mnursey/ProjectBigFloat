@@ -15,8 +15,13 @@ public class GameManager : MonoBehaviour
     public CameraController camera;
     public AudioSource music;
     public CountdownController countdown;
+    public Material BG;
 
-    public int score = 1000;
+    public int score;
+    public int maxScore = 100000; 
+
+    float BGSaturationBonus;
+    public float BGSaturationBonusDamp;
 
 
     bool waitingForLevelStart;
@@ -42,6 +47,7 @@ public class GameManager : MonoBehaviour
     	if(camera == null) camera = GameObject.Find("Main Camera").GetComponent<CameraController>();
     	if(music == null) music = GameObject.Find("Music Source").GetComponent<AudioSource>();
     	if(countdown == null) countdown = GameObject.Find("Countdown").GetComponent<CountdownController>();
+    	if(BG == null) BG = camera.transform.GetChild(0).GetComponent<MeshRenderer>().material;
 
     	player.camera = camera;
     	camera.player = player;
@@ -64,8 +70,15 @@ public class GameManager : MonoBehaviour
 
     	score = 5000;
 
+    	SetBGColour(currentLevel.BGColour);
+
     	currentLevel.map.gameObject.SetActive(true);
     	currentLevel.ionMap.gameObject.SetActive(true);
+
+    	foreach(Transform t in currentLevel.ionMap){
+    		Ion ion = t.GetComponent<Ion>();
+    		ion.SetVisible(true);
+    	}
 
     	player.gameObject.SetActive(true);
     	player.PrepareForLevelStart(currentLevel.map, currentLevel.startAtom, currentLevel.startAngle, currentLevel.frequency);
@@ -91,11 +104,12 @@ public class GameManager : MonoBehaviour
     }
 
     public void DamagePlayer(){
-
+    	PreStartLevel(0);
     }
 
     public void PlayerJump(Atom prev, Atom next){
     	score += 100;
+    	BGSaturationBonus = 0.4f;
 
     	foreach(Transform t in currentLevel.ionMap){
     		Ion ion = t.GetComponent<Ion>();
@@ -103,6 +117,18 @@ public class GameManager : MonoBehaviour
     			ion.Reset();
     		}
     	}
+    }
+
+    public void SetBGColour(Color c){
+    	//BG.SetColor("Color_1432EB74", currentLevel.BGColour1);
+    	BG.SetColor("Color_A528FD8E", c);
+    }
+
+    public void SetBGSaturation(float s){
+    	Color c = BG.GetColor("Color_A528FD8E");
+    	float H, x, V;
+    	Color.RGBToHSV(c, out H, out x, out V);
+    	BG.SetColor("Color_A528FD8E", Color.HSVToRGB(H, s, V));
     }
 
     void Update(){
@@ -113,6 +139,10 @@ public class GameManager : MonoBehaviour
 	    		waitingForLevelStart = false;
 	    		StartLevel();
 	    	}
+
+	    	float saturation = Mathf.Min(0.1f + Mathf.Pow(score/(float)maxScore, 0.7f), 0.8f);
+	    	SetBGSaturation(Mathf.Min(saturation + BGSaturationBonus, 1));
+	    	BGSaturationBonus *= BGSaturationBonusDamp;
 	    }
 
     	if(Input.GetKeyDown("space")){

@@ -80,7 +80,7 @@ MonoBehaviour:
   numLevels: 0
   visualizers: []
   centreVisual: {fileID: 198559505861963752}
-  powered: 0
+  powered: 1
   colour: {r: 0.745283, g: 0.27772337, b: 0.28727144, a: 1}
   poweredColour: {r: 1, g: 1, b: 1, a: 1}
   radiusDebug: 1
