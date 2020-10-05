@@ -1580,9 +1580,9 @@ RectTransform:
   m_Father: {fileID: 6537342684394261477}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 845, y: -242.538}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 666.5, y: -226.672}
   m_SizeDelta: {x: 472.5163, y: 125.99774}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6537342683015795492
@@ -2162,9 +2162,9 @@ RectTransform:
   m_Father: {fileID: 6537342684394261477}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 845, y: -610.50586}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 666.5, y: -462.79456}
   m_SizeDelta: {x: 160, y: 54.206146}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6537342683244920716
@@ -2909,7 +2909,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6537342683533117296}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
@@ -3244,7 +3244,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6537342683603230105
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3260,9 +3260,9 @@ RectTransform:
   m_Father: {fileID: 6537342684394261477}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 845, y: -389.1245}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 791.5, y: -366.1245}
   m_SizeDelta: {x: 160, y: 54.206146}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6537342683603230111
@@ -3972,13 +3972,13 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: adde9359b3c52d94888c751c6af08993, type: 3}
-        m_MethodName: set_name
-        m_Mode: 5
+      - m_Target: {fileID: 0}
+        m_MethodName: EnterLevel
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 2
           m_FloatArgument: 0
           m_StringArgument: GameManager.
           m_BoolArgument: 0
@@ -4100,7 +4100,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6537342683890506356
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4116,9 +4116,9 @@ RectTransform:
   m_Father: {fileID: 6537342684394261477}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 845, y: -499.8152}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 666.5, y: -362.68115}
   m_SizeDelta: {x: 160, y: 54.206146}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6537342683890507146
@@ -4730,9 +4730,9 @@ RectTransform:
   m_Father: {fileID: 6537342684394261477}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 845, y: -75.64843}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 666.5, y: -70.359764}
   m_SizeDelta: {x: 612.0688, y: 94.81232}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6537342684107551206
@@ -4953,7 +4953,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6537342682396774256}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: EnterLevel
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &6537342684251942003
 GameObject:
   m_ObjectHideFlags: 0
