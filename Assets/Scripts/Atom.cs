@@ -49,12 +49,14 @@ public class Atom : MonoBehaviour{
 		radii = new float[numLevels];
 		visualizers = new AtomVisualController[numLevels];
 
-		//temp
-		for(int i = 0; i < numLevels; i++){
-			visualizers[i] = Instantiate(AssetDatabase.LoadAssetAtPath<AtomVisualController>("Assets/Prefabs/AtomVisual.prefab"), transform);
-		}
+        //temp
+        #if UNITY_EDITOR
+            for (int i = 0; i < numLevels; i++){
+			    visualizers[i] = Instantiate(AssetDatabase.LoadAssetAtPath<AtomVisualController>("Assets/Prefabs/AtomVisual.prefab"), transform);
+		    }
+        #endif
 
-		radiusDebug = r;
+        radiusDebug = r;
 		SetRadii(r);
 
         if(centreVisual != null)
