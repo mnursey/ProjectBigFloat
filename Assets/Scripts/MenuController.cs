@@ -80,4 +80,9 @@ public class MenuController : MonoBehaviour
     {
         finalScoreText.text = "Final Score\n" + score;
     }
+
+    public static MenuController GetMC()
+    {
+        return GameObject.Find("MenuController").GetComponent<MenuController>();
+    }
 }
