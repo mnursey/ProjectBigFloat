@@ -8,8 +8,10 @@ using EGL = UnityEditor.EditorGUILayout;
 
 public class IonToolWindow : EditorWindow
 {
-	private Transform mapHolder;
-    private Transform map;
+	private Transform atomMapHolder;
+	private Transform atomMap;
+	private Transform ionMapHolder;
+    private Transform ionMap;
     private int targetMapIndex = 0;
     public Ion toBePlaced;
 
@@ -21,15 +23,19 @@ public class IonToolWindow : EditorWindow
 	public IonBehaviour behaviour;
     public float radius;
     public int subdiv;
+    public int subdivOffset;
+
+    public float orbitFreq;
+    public Atom resetTrigger;
     
     int radiusIndex;
     int subdivIndex;
 
    	//string[] radiusLabels = {"0.1", "0.2", "", "4", "6", "8", "12", "16"};
-   	string[] subdivLabels = {"1/4", "1/6", "1/8", "1/12", "1/16", "NA"};
+   	string[] subdivLabels = {"1/4", "1/6", "1/8", "1/12", "1/16", "1/24", "1/32"};
 
    	//int[] radiusOptions = {1, 2, 3, 4, 6, 8, 12, 16};
-   	int[] subdivOptions = {4, 6, 8, 12, 16, 0};
+   	int[] subdivOptions = {4, 6, 8, 12, 16, 24, 32};
 
     [MenuItem("Window/Ion Placement Tool")]
 	private static void OpenWindow(){
@@ -68,22 +74,37 @@ public class IonToolWindow : EditorWindow
  	}
 
 	public void OnGUI(){
-		if(mapHolder == null){
-			mapHolder = GameObject.Find("Ion Map List").transform;
-			if(mapHolder == null){
+		if(atomMapHolder == null){
+			atomMapHolder = GameObject.Find("Atom Map List").transform;
+			if(atomMapHolder == null){
+				GUI.Label(new Rect((position.width - 100)/2, (position.height - 20)/2, 100, 20), "NO ATOM MAP LIST");
+				return;
+			}
+		}
+
+		if(ionMapHolder == null){
+			ionMapHolder = GameObject.Find("Ion Map List").transform;
+			if(ionMapHolder == null){
 				GUI.Label(new Rect((position.width - 100)/2, (position.height - 20)/2, 100, 20), "NO ION MAP LIST");
 				return;
 			}
 		}
 
-		if(map == null) SetTargetMap(0);
+		if(atomMap == null || ionMap == null) SetTargetMap(0);
 
 		behaviour = (IonBehaviour)EGL.EnumPopup("Behaviour:", behaviour);
 
-		radiusIndex = EGL.IntSlider("Radius:", radiusIndex, 0, 200);
+		radiusIndex = EGL.IntSlider("Radius:", radiusIndex, 0, 500);
 
 		GL.Label("Subdivision:");
 		subdivIndex = GL.Toolbar(subdivIndex, subdivLabels);
+
+		subdivOffset = EGL.IntField("Subdiv Offset:", subdivOffset);
+
+		if(behaviour == IonBehaviour.Orbit){
+			orbitFreq = EGL.FloatField("Orbit Speed:", orbitFreq);
+			resetTrigger = (Atom)EGL.ObjectField("Reset Trig:", resetTrigger, typeof(Atom));
+		}
 
 		bool prevEditingState = isEditing;
 		GL.BeginHorizontal();
@@ -92,7 +113,7 @@ public class IonToolWindow : EditorWindow
 		if(isEditing != prevEditingState) ToggleEditing(isEditing);
 
 		int prevTarget = targetMapIndex;
-		targetMapIndex = (int)Mathf.Clamp(EGL.IntField("Target Map", targetMapIndex), 0, mapHolder.childCount-1);
+		targetMapIndex = (int)Mathf.Clamp(EGL.IntField("Target Map", targetMapIndex), 0, atomMapHolder.childCount-1);
 		if(prevTarget != targetMapIndex) SetTargetMap(targetMapIndex);
 		GL.EndHorizontal();
 
@@ -111,7 +132,7 @@ public class IonToolWindow : EditorWindow
 				toBePlaced.Init(behaviour, radius*baseRadiusUnit);
 				//Debug.Log("PREVIEW");
 			}else if(e.type == EventType.MouseDrag && e.button == 1){
-				foreach(Transform t in map){
+				foreach(Transform t in ionMap){
 					if(((Vector2)t.position - mousePos).sqrMagnitude < 1){
 						DestroyImmediate(t.gameObject);
 					}
@@ -136,12 +157,12 @@ public class IonToolWindow : EditorWindow
 
 			switch(behaviour){
 				case IonBehaviour.Orbit:
-					if(map.transform.childCount > 0){
+					if(atomMap.transform.childCount > 0){
 						Atom closest = null;
 						int closestLevel = 0;
 						float closestDist = float.MaxValue;
 
-						foreach(Transform t in map){
+						foreach(Transform t in atomMap){
 							Atom a = t.GetComponent<Atom>();
 
 							for(int l = 0; l < a.radii.Length; l++){
@@ -157,12 +178,15 @@ public class IonToolWindow : EditorWindow
 
 						if(closestDist < anchorSnapThresh){
 							anchor = closest;
-							Vector2 snapDir = AtomToolWindow.GetSnapDir(anchor, mousePos, subdiv);
+
+							Vector2 snapDir = AtomToolWindow.GetSnapDir(anchor, mousePos, subdiv, subdivOffset*Mathf.Deg2Rad);
 							placePoint = (Vector2)anchor.transform.position + snapDir*(anchor.radii[closestLevel]);
 
 							toBePlaced.parent = anchor;
 							toBePlaced.initAngle = Util.VectorAngle(snapDir);
 							toBePlaced.orbitLevel = closestLevel;
+							toBePlaced.orbitFreq = orbitFreq;
+							if(resetTrigger != null) toBePlaced.resetTrigger = resetTrigger;
 						}
 					}
 				break;
@@ -177,7 +201,7 @@ public class IonToolWindow : EditorWindow
 			toBePlaced.transform.position = (Vector3)placePoint;
 
 			if(e.type == EventType.MouseDown && e.button == 0){
-				toBePlaced.transform.SetParent(map);
+				toBePlaced.transform.SetParent(ionMap);
 				toBePlaced = null;
 				//Debug.Log("PLACED");
 			}
@@ -192,7 +216,8 @@ public class IonToolWindow : EditorWindow
 
 
 	public void SetTargetMap(int i){
-		map = mapHolder.GetChild(i);
+		atomMap = atomMapHolder.GetChild(i);
+		ionMap = ionMapHolder.GetChild(i);
 	}
 
 }

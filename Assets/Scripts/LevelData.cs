@@ -6,6 +6,7 @@ using UnityEngine;
 public class LevelData : MonoBehaviour
 {
     public Transform map;
+    public Transform ionMap;
     public Atom startAtom;
     public float startAngle;
     public List<Atom> checkpoints = new List<Atom>();
