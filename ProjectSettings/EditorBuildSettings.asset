@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/MitchsGarbage.unity
-    guid: 0f755b15f9d21dc4bae50d5c37698d39
+    path: Assets/Scenes/MasterScene.unity
+    guid: f2b7e45235114444d81153b58ae097d9
   m_configObjects: {}

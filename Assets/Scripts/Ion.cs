@@ -49,6 +49,11 @@ public class Ion : MonoBehaviour
     	transform.localScale = new Vector3(r, r, 1);
     }
 
+    void Start()
+    {
+        GM = GameManager.GetGM();
+    }
+
 
     public void Reset(){
     	SetVisible(true);

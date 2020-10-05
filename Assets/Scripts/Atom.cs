@@ -41,6 +41,7 @@ public class Atom : MonoBehaviour{
     void Start()
     {
         lrs = GetComponentsInChildren<LineRenderer>().ToList();
+        GM = GameManager.GetGM();
     }
 
 	public void Init(float r, int l){
