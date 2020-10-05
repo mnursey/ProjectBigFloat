@@ -25,15 +25,15 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.49497475"
-     inkscape:cx="267.54307"
-     inkscape:cy="657.9812"
+     inkscape:cx="59.808927"
+     inkscape:cy="-12.838015"
      inkscape:document-units="px"
-     inkscape:current-layer="layer1"
+     inkscape:current-layer="g2999"
      showgrid="false"
      inkscape:window-width="1159"
      inkscape:window-height="730"
-     inkscape:window-x="51"
-     inkscape:window-y="196"
+     inkscape:window-x="-32000"
+     inkscape:window-y="-32000"
      inkscape:window-maximized="0"
      inkscape:snap-bbox="true"
      inkscape:bbox-paths="true"
@@ -103,6 +103,33 @@
          d="m 343.96875,205.40625 -138.125,56.6875 97.625,0 30.0625,56.03125 138.125,-56.6875 -97.625,0 -30.0625,-56.03125 z"
          style="fill:#ffffff;stroke:none"
          inkscape:connector-curvature="0" />
+    </g>
+    <rect
+       inkscape:export-ydpi="196.04243"
+       inkscape:export-xdpi="196.04243"
+       inkscape:export-filename="D:\Desktop\BigFloat\ProjectBigFloat\Assets\Textures\bolt.png"
+       ry="33.335037"
+       rx="25.253819"
+       y="803.90314"
+       x="91.577019"
+       height="470.10229"
+       width="470.10229"
+       id="rect2997"
+       style="fill:none;stroke:none" />
+    <g
+       inkscape:export-ydpi="196.04243"
+       inkscape:export-xdpi="196.04243"
+       inkscape:export-filename="D:\Desktop\BigFloat\ProjectBigFloat\Assets\Textures\rect3755.png"
+       transform="translate(-43.686132,775.52124)"
+       id="g2999">
+      <path
+         inkscape:connector-curvature="0"
+         style="fill:#ffffff;stroke:none"
+         d="m 379.54391,163.75876 -244.28076,100.25459 172.65455,0 53.16699,99.09398 244.28076,-100.25459 -172.65455,0 -53.16699,-99.09398 z"
+         id="path3005"
+         inkscape:export-filename="D:\Desktop\BigFloat\ProjectBigFloat\Assets\Textures\bolt.png"
+         inkscape:export-xdpi="196.04243"
+         inkscape:export-ydpi="196.04243" />
     </g>
   </g>
 </svg>

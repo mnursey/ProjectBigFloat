@@ -1451,6 +1451,7 @@ MonoBehaviour:
   creditsMenu: {fileID: 6537342683984695693}
   currentMenu: {fileID: 0}
   clickSoundEffect: {fileID: 6537342682997292876}
+  finalScoreText: {fileID: 6537342683015795493}
 --- !u!82 &6537342682997292876
 AudioSource:
   m_ObjectHideFlags: 0
